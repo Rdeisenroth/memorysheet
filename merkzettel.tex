@@ -1,0 +1,59 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper,landscape=true]{geometry}
+\usepackage{tikz,xparse,etoolbox}
+\usepackage[
+    %enable
+]{darkmode}
+\usetikzlibrary{calc}
+\pagestyle{empty}
+
+% Einstellungen
+\def\margin{5mm}
+\def\bereichsbreite{4cm}
+\def\titletext{Merkzettel von: \rule{3cm}{0.4pt}}
+\def\pageamount{2}
+
+\colorlet{gridcolor}{gray!50!\thepagecolor}
+\colorlet{bordercolor}{fgcolor}
+\colorlet{hspacercolor}{fgcolor}
+\colorlet{vspacercolor}{fgcolor}
+
+\def\dotfill#1{\cleaders\hbox to #1{.}\hfill}
+\newcommand\dotline[2][.5em]{\leavevmode\hbox to #2{\dotfill{#1}\hfil}}
+\DeclareDocumentCommand{\memorysheetpage}{}{
+    \begin{tikzpicture}[remember picture,overlay]
+        \coordinate(topleft) at ([xshift=\margin,yshift=-\margin]current page.north west);
+        \coordinate(topright) at ([xshift=-\margin,yshift=-\margin]current page.north east);
+        \coordinate(bottomright) at ([xshift=-\margin,yshift=\margin]current page.south east);
+        \coordinate(bottomleft) at ([xshift=\margin,yshift=\margin]current page.south west);
+        % Grid
+        \draw[step=2.5mm,gridcolor](topleft) grid (bottomright);
+        %\draw[step=5mm,gridcolor,line width=.7pt](topleft) grid (bottomright);
+        %\draw[step=1cm,gridcolor,line width=1pt](topleft) grid (bottomright);
+
+        % vertical Spacers
+        \foreach [count=\j]\i in {0,\bereichsbreite,...,\paperwidth} {
+            % \ifnum\j<8\relax
+            \draw[vspacercolor,line width=2pt]([xshift=\i-.4pt,yshift=-2cm+3.5pt+\margin]topleft)--([xshift=\i]bottomleft);
+            % \fi
+        }
+
+        % horizontal Spacer
+        \draw[hspacercolor,line width=2pt]([yshift=-2cm+3.5pt+\margin]topleft)--([yshift=-2cm+3.5pt+\margin]topright);
+
+        % Border
+        \draw[bordercolor,line width=2pt]([xshift=-.4pt,yshift=.4pt]topleft) rectangle([xshift=.4pt,yshift=-.4pt]bottomright);
+
+        \node[fill=\thepagecolor,draw,ultra thick,anchor=north, outer sep=0pt] at ([yshift=-\margin]current page.north) {\titletext};
+    \end{tikzpicture}
+}
+\ifnum\pageamount<1\relax
+    \PackageError{memorysheet}{Page amount set to less than 1. dont do that!}{just don't.}
+\fi
+\begin{document}
+    \memorysheetpage%
+    \foreach \i in {2,...,\pageamount}{%
+        \clearpage%
+        \memorysheetpage%
+    }%
+\end{document}
