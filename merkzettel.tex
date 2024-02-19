@@ -1,55 +1,119 @@
 \documentclass[a4paper]{article}
+
+%%------------%%
+%%--Packages--%%
+%%------------%%
+
 \usepackage[a4paper,landscape=true]{geometry}
-\usepackage{tikz,xparse,etoolbox}
-\usepackage[
-    %enable
-]{darkmode}
+\usepackage{tikz,xparse,etoolbox,xifthen}
+\usepackage[hidelinks]{hyperref}
+\usepackage[]{darkmode}
+\usepackage{tudafonts}
 \usetikzlibrary{calc}
 \pagestyle{empty}
 
-% Einstellungen
-\def\margin{5mm}
-\def\bereichsbreite{4cm}
-\def\titletext{Merkzettel von: \rule{3cm}{0.4pt}}
-\def\pageamount{2}
+%%---------------------------%%
+%%--Dokumenteneinstellungen--%%
+%%---------------------------%%
 
+% the margin of the page (the space between the border of the page and the border of the memorysheet)
+\def\margin{5mm}
+% the width of each bucket
+\def\bereichsbreite{4cm}
+% the title text
+\def\titletext{\sffamily Merkzettel von: \rule{3cm}{0.4pt}}
+% the amount of pages to be generated (two pages equal one double sided sheet and is the default)
+\def\pageamount{2}
+% whether or not to print page numbers. default is true
+\newboolean{printpagenumbers}
+\setboolean{printpagenumbers}{true}
+% whether or not to print the watermark. default is false
+\newboolean{printwatermark}
+\setboolean{printwatermark}{false}
+% whether or not to print the credits. default is true
+\newboolean{printcredits}
+\setboolean{printcredits}{true}
+
+
+% here you can redefine the colors used in the memorysheet.
 \colorlet{gridcolor}{gray!50!\thepagecolor}
 \colorlet{bordercolor}{fgcolor}
 \colorlet{hspacercolor}{fgcolor}
 \colorlet{vspacercolor}{fgcolor}
 
+% and here you can redefine the thickness of the lines
+\def\borderthickness{2pt}
+\def\spacerthickness{2pt}
+
+%%----------------------------%%
+%%--Stilistische Anpassungen--%%
+%%----------------------------%%
+
 \def\dotfill#1{\cleaders\hbox to #1{.}\hfill}
 \newcommand\dotline[2][.5em]{\leavevmode\hbox to #2{\dotfill{#1}\hfil}}
 \DeclareDocumentCommand{\memorysheetpage}{}{
     \begin{tikzpicture}[remember picture,overlay]
-        \coordinate(topleft) at ([xshift=\margin,yshift=-\margin]current page.north west);
-        \coordinate(topright) at ([xshift=-\margin,yshift=-\margin]current page.north east);
-        \coordinate(bottomright) at ([xshift=-\margin,yshift=\margin]current page.south east);
-        \coordinate(bottomleft) at ([xshift=\margin,yshift=\margin]current page.south west);
+        % Outer Box
+        \node[
+            inner sep=0pt,
+            outer sep=0pt,
+            text width=\the\dimexpr\paperwidth-\margin-\margin\relax,
+            text height=\the\dimexpr\paperheight-\margin-\margin\relax,
+            % draw=bordercolor,
+            % line width=\borderthickness,
+        ] at (current page.center) (mempage) {};
+
+        % Watermark
+        \ifthenelse{\boolean{printwatermark}}{
+            \node[anchor=center,outer sep=0pt] at (current page.center) {\includegraphics[width=0.5\paperwidth]{tuda_logo}};
+            % watermark opacity
+            \fill[\thepagecolor,opacity=0.9] (mempage.north west) rectangle (mempage.south east);
+        }{}
+
         % Grid
-        \draw[step=2.5mm,gridcolor](topleft) grid (bottomright);
-        %\draw[step=5mm,gridcolor,line width=.7pt](topleft) grid (bottomright);
-        %\draw[step=1cm,gridcolor,line width=1pt](topleft) grid (bottomright);
+        \draw[
+            gridcolor,
+            step=2.5mm,
+            line width=\pgflinewidth,
+            xshift=\margin + 1.25 * \pgflinewidth,
+            yshift=.125cm+\margin - 0.25 * \pgflinewidth,
+        ] (mempage.north west) grid (mempage.south east);
 
         % vertical Spacers
         \foreach [count=\j]\i in {0,\bereichsbreite,...,\paperwidth} {
             % \ifnum\j<8\relax
-            \draw[vspacercolor,line width=2pt]([xshift=\i-.4pt,yshift=-2cm+3.5pt+\margin]topleft)--([xshift=\i]bottomleft);
+            \draw[vspacercolor,line width=\spacerthickness]([xshift=\i,yshift=-1.5cm]mempage.north west)--([xshift=\i]mempage.south west);
             % \fi
         }
 
         % horizontal Spacer
-        \draw[hspacercolor,line width=2pt]([yshift=-2cm+3.5pt+\margin]topleft)--([yshift=-2cm+3.5pt+\margin]topright);
+        \draw[hspacercolor,line width=\spacerthickness]([yshift=-1.5cm]mempage.north west)--([yshift=-1.5cm]mempage.north east);
 
         % Border
-        \draw[bordercolor,line width=2pt]([xshift=-.4pt,yshift=.4pt]topleft) rectangle([xshift=.4pt,yshift=-.4pt]bottomright);
+        \draw[bordercolor,line width=\borderthickness](mempage.north west) rectangle (mempage.south east);
 
-        \node[fill=\thepagecolor,draw,ultra thick,anchor=north, outer sep=0pt] at ([yshift=-\margin]current page.north) {\titletext};
+        % Title box
+        \node[fill=\thepagecolor,draw=bordercolor,line width=\borderthickness,anchor=north, outer sep=0pt] at ([yshift=-\margin]current page.north) {\titletext};
+
+        % Page number
+        \ifthenelse{\boolean{printpagenumbers}}{
+            \node[anchor=south,outer sep=0pt] at (current page.south) {Seite \thepage};
+        }{}
+
+        % Credits
+        \ifthenelse{\boolean{printcredits}}{
+            \node[anchor=north,outer sep=0pt,font=\scriptsize] at (current page.north) {Created with: \url{https://github.com/Rdeisenroth/memorysheet}};
+        }{}
     \end{tikzpicture}
 }
 \ifnum\pageamount<1\relax
     \PackageError{memorysheet}{Page amount set to less than 1. dont do that!}{just don't.}
 \fi
+
+%%-------------------------%%
+%%--Beginn des Dokumentes--%%
+%%-------------------------%%
+
 \begin{document}
     \memorysheetpage%
     \foreach \i in {2,...,\pageamount}{%
