@@ -1,6 +1,6 @@
 ### VS-Code ###
 .vscode/*
-!.vscode/settings.json
+!.vscode/settings-default.json
 !.vscode/extensions.json
 .VSCodeCounter/
 
