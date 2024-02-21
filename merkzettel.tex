@@ -97,12 +97,12 @@
 
         % Page number
         \ifthenelse{\boolean{printpagenumbers}}{
-            \node[anchor=south,outer sep=0pt] at (current page.south) {Seite \thepage};
+            \node[anchor=south,outer sep=0pt,fill=\thepagecolor,draw=bordercolor,line width=\borderthickness] at (mempage.south) {Seite \thepage};
         }{}
 
         % Credits
         \ifthenelse{\boolean{printcredits}}{
-            \node[anchor=north,outer sep=0pt,font=\scriptsize] at (current page.north) {Created with: \url{https://github.com/Rdeisenroth/memorysheet}};
+            \node[anchor=south,outer sep=0pt,font=\scriptsize] at ([yshift=-1.5cm]mempage.north) {Created with: \url{https://github.com/Rdeisenroth/memorysheet}};
         }{}
     \end{tikzpicture}
 }
