@@ -1,6 +1,9 @@
+build/
+debug/
+
 ### VS-Code ###
 .vscode/*
-!.vscode/settings-default.json
+!.vscode/settings.default.json
 !.vscode/extensions.json
 .VSCodeCounter/
 

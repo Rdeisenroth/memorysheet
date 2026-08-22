@@ -18,6 +18,9 @@ trim_trailing_whitespace = false
 indent_size = 2
 trim_trailing_whitespace = false
 
+[*.typ]
+indent_size = 2
+
 [{Makefile,.gitmodules}]
 indent_style = tab
 
