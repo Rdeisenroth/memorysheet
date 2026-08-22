@@ -98,7 +98,7 @@
     ]
 
     #if config.show-credits [
-      #place(top + center, dy: config.margin + config.header-height - 2 * 7pt)[
+      #place(top + center, dy: config.margin + config.header-height - 2 * 7pt + 1.25mm)[
         #text(size: 7pt)[#config.credit]
       ]
     ]

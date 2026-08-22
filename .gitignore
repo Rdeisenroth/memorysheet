@@ -1,5 +1,6 @@
 build/
 debug/
+.fonts/
 
 ### VS-Code ###
 .vscode/*

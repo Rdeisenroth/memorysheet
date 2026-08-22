@@ -18,7 +18,23 @@ jobs:
         uses: actions/checkout@v7
       - name: Set up Typst
         uses: typst-community/setup-typst@v5
+      - name: Restore Arial font cache
+        id: arial-font-cache
+        uses: actions/cache@v6
+        with:
+          path: .fonts/arial
+          key: arial-fonts-v1
+      - name: Install Arial fonts
+        if: steps.arial-font-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .fonts/arial /tmp/memorysheet-fonts
+          curl --fail --location --output /tmp/memorysheet-fonts/arial.zip https://befonts.com/wp-content/uploads/2022/09/arial-font.zip
+          unzip -q /tmp/memorysheet-fonts/arial.zip -d /tmp/memorysheet-fonts/extracted
+          find /tmp/memorysheet-fonts/extracted -type f \( -iname '*.ttf' -o -iname '*.otf' \) -exec cp {} .fonts/arial/ \;
+          test -n "$(find .fonts/arial -type f -name '*.ttf' -o -name '*.otf')"
       - name: Build PDF/A
+        env:
+          TYPST_FONT_PATHS: ${{ github.workspace }}/.fonts/arial
         run: make compile
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v7
