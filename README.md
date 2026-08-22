@@ -5,7 +5,7 @@ A structured [Typst](https://typst.app/) template for creating memory sheets per
 <p align="center">
   <b>Latest memory sheet</b><br>
   <!-- Replace this placeholder Nextcloud public-share URL with your own. -->
-  <a href="https://nextcloud.domain.tld/public.php/dav/files/some_file_id/memorysheet.pdf">
+  <a href="https://next.hessenbox.de/index.php/s/o9ERzPST68gw9cE?dir=/&editing=false&openfile=true">
     <img src="https://img.shields.io/badge/Download%20Memory%20Sheet-PDF-blue?style=for-the-badge" alt="Download the latest memory sheet PDF">
   </a>
 </p>
