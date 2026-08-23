@@ -20,7 +20,7 @@ Install [Typst](https://github.com/typst/typst), then run:
 make
 ```
 
-The PDF is written to `build/memorysheet.pdf`. Use `make watch` during editing, `make preview` to export the first page as a PNG, and `make lint` to check Typst formatting.
+The PDF is written to `build/memorysheet.pdf`. Use `make watch` during editing, `make preview` to update the neutral SVG shown below, and `make lint` to check Typst formatting.
 
 The TU Darmstadt watermark is downloaded on demand through Docker and is intentionally not stored in Git. Run `make download-watermark` explicitly, or let `make` fetch it when it is missing.
 

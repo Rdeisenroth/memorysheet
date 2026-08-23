@@ -2,6 +2,7 @@ OUT_DIR := build
 SOURCE := memorysheet.typ
 PDF := $(OUT_DIR)/memorysheet.pdf
 WATERMARK := img/tuda_logo.svg
+PREVIEW := img/preview.svg
 
 .PHONY: all compile preview watch lint clean download-watermark
 
@@ -19,8 +20,16 @@ $(WATERMARK): .github/Dockerfile.logo scripts/download_watermark.sh
 
 download-watermark: $(WATERMARK)
 
-preview: compile
-	pdftoppm -png -f 1 -singlefile -r 150 $(PDF) $(OUT_DIR)/memorysheet-preview
+preview: $(PREVIEW)
+
+$(PREVIEW): src/config.typ src/memorysheet.typ $(WATERMARK)
+	printf '%s\n' \
+	  '#import "src/memorysheet.typ": memorysheet' \
+	  '#show: memorysheet.with(' \
+	  '  page-count: 1,' \
+	  '  title: [Merkzettel von: #box(width: 3cm, height: 1em, stroke: (bottom: 0.75pt))[]],' \
+	  ')' \
+	  | typst compile --format svg --pages 1 - $(PREVIEW)
 
 watch:
 	typst watch $(SOURCE) $(PDF)

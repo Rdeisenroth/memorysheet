@@ -76,8 +76,8 @@
     let grid-columns = grid-column-sizes.len()
     let grid-rows = grid-row-sizes.len()
     let spacer-count = calc.ceil(inner-width / config.column-width) + 1
-    let measured-title-width = measure(config.title).width
-    let title-grid-columns = fitted-grid-columns(measured-title-width, config.title-padding, config.grid-size)
+    let title-content-size = measure(config.title)
+    let title-grid-columns = fitted-grid-columns(title-content-size.width, config.title-padding, config.grid-size)
     assert(title-grid-columns <= grid-columns, message: "title box is wider than the grid")
     assert(config.title-grid-rows <= grid-rows, message: "title box is taller than the grid")
     let title-width = title-grid-columns * config.grid-size
@@ -146,7 +146,13 @@
           inset: 0pt,
           fill: config.page-fill,
           stroke: (paint: config.border-color, thickness: config.border-thickness),
-        )[ #align(center + horizon)[#config.title] ]
+        )[
+          #place(
+            top + left,
+            dx: (title-width - title-content-size.width) / 2,
+            dy: (title-height - title-content-size.height) / 2 + config.title-vertical-offset,
+          )[#config.title]
+        ]
       ]
 
       #if config.show-credits [
@@ -185,6 +191,7 @@
 /// - `title` (content): Content centered in the top title box; use `*text*` for bold text.
 /// - `title-grid-rows` (integer, default: `2`): Fixed title-box height in grid rows.
 /// - `title-padding` (length, default: `2.5mm`): Nominal free space on each title side before width is rounded to cells.
+/// - `title-vertical-offset` (length, default: `-0.7mm`): Optical adjustment for title glyphs and the baseline-aligned underline box; negative values move them upward.
 /// - `page-count` (integer, default: `2`): Number of sheet pages to generate; two pages form one double-sided sheet.
 /// - `show-page-numbers` (boolean, default: `true`): Whether to draw the bottom page-number box.
 /// - `page-number-width` (length, default: `1.25cm`): Page-number box width; default is five grid cells.
@@ -213,6 +220,7 @@
   title: [*NETSEC* Merkzettel von: #box(width: 3cm, height: 1em, stroke: (bottom: 0.75pt))[]],
   title-grid-rows: 2,
   title-padding: 2.5mm,
+  title-vertical-offset: -0.7mm,
   page-count: 2,
   show-page-numbers: true,
   page-number-width: 1.25cm,
@@ -242,6 +250,7 @@
     title: title,
     title-grid-rows: title-grid-rows,
     title-padding: title-padding,
+    title-vertical-offset: title-vertical-offset,
     page-count: page-count,
     show-page-numbers: show-page-numbers,
     page-number-width: page-number-width,
