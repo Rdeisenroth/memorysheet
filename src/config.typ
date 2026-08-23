@@ -1,4 +1,12 @@
-// Input validation shared by the public template function.
+/// Validates the complete memory-sheet configuration.
+///
+/// This is kept separate from rendering so invalid settings fail before any page content is created.
+///
+/// Arguments:
+/// - `config` (dictionary): Fully populated configuration assembled by `memorysheet`.
+///
+/// Returns:
+/// The unchanged, validated configuration dictionary.
 #let validate(config) = {
   assert(type(config.page-count) == int, message: "page-count must be an integer")
   assert(config.page-count >= 1, message: "page-count must be at least 1")
@@ -11,10 +19,9 @@
   assert(config.column-width > 0pt, message: "column-width must be greater than zero")
   assert(config.header-height >= 0pt, message: "header-height must not be negative")
   assert(config.header-height < 210mm - 2 * config.margin, message: "header-height exceeds the writing area")
-  assert(type(config.title-grid-columns) == int, message: "title-grid-columns must be an integer")
   assert(type(config.title-grid-rows) == int, message: "title-grid-rows must be an integer")
-  assert(config.title-grid-columns >= 1, message: "title-grid-columns must be at least 1")
   assert(config.title-grid-rows >= 1, message: "title-grid-rows must be at least 1")
+  assert(config.title-padding >= 0pt, message: "title-padding must not be negative")
   assert(config.border-thickness >= 0pt, message: "border-thickness must not be negative")
   assert(config.spacer-thickness >= 0pt, message: "spacer-thickness must not be negative")
   assert(config.page-number-width > 0pt, message: "page-number-width must be greater than zero")
