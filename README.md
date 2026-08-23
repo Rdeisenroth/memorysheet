@@ -22,6 +22,8 @@ make
 
 The PDF is written to `build/memorysheet.pdf`. Use `make watch` during editing, `make preview` to export the first page as a PNG, and `make lint` to check Typst formatting.
 
+The TU Darmstadt watermark is downloaded on demand through Docker and is intentionally not stored in Git. Run `make download-watermark` explicitly, or let `make` fetch it when it is missing.
+
 ## Publishing from GitHub Actions
 
 On pushes to `main` or `master`, the workflow builds a PDF/A-2b artifact and deploys it to Nextcloud through WebDAV. Configure these repository secrets before enabling a real upload:

@@ -1,17 +1,23 @@
 OUT_DIR := build
 SOURCE := memorysheet.typ
 PDF := $(OUT_DIR)/memorysheet.pdf
+WATERMARK := img/tuda_logo.svg
 
-.PHONY: all compile preview watch lint clean
+.PHONY: all compile preview watch lint clean download-watermark
 
 all: compile
 
 compile: $(PDF)
 
-$(PDF): $(SOURCE) src/config.typ src/memorysheet.typ img/tuda_logo.svg
+$(PDF): $(SOURCE) src/config.typ src/memorysheet.typ $(WATERMARK)
 
 	@mkdir -p $(OUT_DIR)
 	typst compile --pdf-standard a-2b $(SOURCE) $@
+
+$(WATERMARK): .github/Dockerfile.logo scripts/download_watermark.sh
+	sh scripts/download_watermark.sh
+
+download-watermark: $(WATERMARK)
 
 preview: compile
 	pdftoppm -png -f 1 -singlefile -r 150 $(PDF) $(OUT_DIR)/memorysheet-preview

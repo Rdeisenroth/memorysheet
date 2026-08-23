@@ -1,0 +1,16 @@
+FROM archlinux:latest AS build
+
+WORKDIR /logo
+
+RUN pacman -Syu --noconfirm \
+    && pacman -Sy --needed --noconfirm inkscape librsvg
+
+RUN curl -O https://www.tu-darmstadt.de/media/medien_stabsstelle_km/services/medien_cd/das_bild_der_tu_darmstadt.pdf \
+    && inkscape das_bild_der_tu_darmstadt.pdf --export-filename=source.svg --export-dpi=600 --pages=1 \
+    && sed -i 's/icc-color([^)]*)//g' source.svg \
+    && sed -i 's/#000000/#1d1d1bff/g' source.svg \
+    && rsvg-convert --format=svg --output=tuda_logo.svg --export-id=g20 source.svg
+
+FROM scratch AS export-stage
+
+COPY --from=build /logo/tuda_logo.svg .
