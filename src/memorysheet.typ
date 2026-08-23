@@ -41,14 +41,18 @@
 /// - `cell-size` (length): Width of one grid cell.
 #let fitted-grid-columns(content-width, padding, cell-size) = calc.ceil((content-width + 2 * padding) / cell-size)
 
-/// Loads the SVG watermark and applies the configured opacity to its opaque fills.
+/// Loads the SVG watermark and applies the configured opacity to its opaque fills and strokes.
 ///
 /// Arguments:
 /// - `path` (path or string): SVG watermark asset path, relative to this module.
-/// - `opacity` (ratio): Opacity applied to the watermark's opaque SVG fills.
+/// - `opacity` (ratio): Opacity applied to the watermark's opaque SVG fills and strokes.
 /// - `width` (relative length): Rendered width of the watermark.
 #let watermark(path, opacity, width) = image(
-  bytes(read(path).replace("fill-opacity=\"1\"", "fill-opacity=\"" + str(opacity / 100%) + "\"")),
+  bytes(
+    read(path)
+      .replace("fill-opacity=\"1\"", "fill-opacity=\"" + str(opacity / 100%) + "\"")
+      .replace("stroke-opacity=\"1\"", "stroke-opacity=\"" + str(opacity / 100%) + "\""),
+  ),
   format: "svg",
   width: width,
 )
