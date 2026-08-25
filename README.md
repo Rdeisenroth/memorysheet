@@ -36,7 +36,9 @@ The destination receives `memorysheet.pdf`; uploads are skipped safely until all
 
 You might want to turn off page numbers or the credits, if your printer doesn't support borderless printing.
 
-I recommend these pens for writing on the sheet, as they are the smallest I could find (no this is not an affiliate link): https://amzn.eu/d/hPTl6ck
+I recommend these pens for writing on the sheet, as they truly are the smallest fineliners I could find (no, this is not an affiliate link): https://www.amazon.de/dp/B07DJNTHGY
+
+They do not last very long, and some can arrive defective out of the box, so I recommend buying the 12-pack directly. They are still worth it for their size though imo.
 
 ## Preview
 ### The template
@@ -48,4 +50,4 @@ Here is an example I used during an actual exam:
 ![Example](img/FMSe-Merkzettel%20(1).jpg)
 ![Example](img/FMSe-Merkzettel%20(2).jpg)
 
-Nowadays, I also like to use colors, to make the sheet more readable and to make it easier to find things.
+Nowadays, I also like to use colors to make the sheet more readable and easier to scan. For that, I recommend this Micron pack: https://www.amazon.de/dp/B08RXZYB1P
