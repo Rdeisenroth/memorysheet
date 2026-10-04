@@ -24,12 +24,12 @@ preview: $(PREVIEW)
 
 $(PREVIEW): src/config.typ src/memorysheet.typ $(WATERMARK)
 	printf '%s\n' \
-	  '#import "src/memorysheet.typ": memorysheet' \
-	  '#show: memorysheet.with(' \
-	  '  page-count: 1,' \
-	  '  title: [Merkzettel von: #box(width: 3cm, height: 1em, stroke: (bottom: 0.75pt))[]],' \
-	  ')' \
-	  | typst compile --format svg --pages 1 - $(PREVIEW)
+		'#import "src/memorysheet.typ": memorysheet' \
+		'#show: memorysheet.with(' \
+		'  page-count: 1,' \
+		'  title: [Merkzettel von: #box(width: 3cm, height: 1em, stroke: (bottom: 0.75pt))[]],' \
+		')' \
+		| typst compile --format svg --pages 1 - $(PREVIEW)
 
 watch:
 	typst watch $(SOURCE) $(PDF)
